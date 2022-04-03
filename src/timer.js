@@ -1,4 +1,4 @@
-class Timer {
+export default class Timer {
   constructor(callback, timeInterval, options) {
     this.timeInterval = timeInterval;
 
@@ -43,5 +43,3 @@ class Timer {
     };
   }
 }
-
-export default Timer;
