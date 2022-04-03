@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Timer from "./timer";
 
@@ -173,7 +173,7 @@ function App() {
     metronome.timeInterval = 60000 / bpm;
   };
 
-  const playClick = () => {
+  const playClick = useCallback(() => {
     console.log(count);
     if (count === beatsPerMeasure) {
       setCount(0);
@@ -186,9 +186,15 @@ function App() {
       click2.currentTime = 0;
     }
     setCount((prev) => prev + 1);
-  };
+  }, [beatsPerMeasure, count]);
 
-  const metronome = new Timer(playClick, 60000 / bpm, { immediate: true });
+  const metronome = new Timer(playClick, 60000 / bpm, {
+    immediate: true,
+  });
+
+  const startMetronome = () => {
+    const nextClick = Date.now() + 60000 / bpm;
+  };
 
   return (
     <Container>
