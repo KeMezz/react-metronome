@@ -188,13 +188,7 @@ function App() {
     setCount((prev) => prev + 1);
   }, [beatsPerMeasure, count]);
 
-  const metronome = new Timer(playClick, 60000 / bpm, {
-    immediate: true,
-  });
-
-  const startMetronome = () => {
-    const nextClick = Date.now() + 60000 / bpm;
-  };
+  const metronome = new Timer(playClick, 60000 / bpm, { immediate: true });
 
   return (
     <Container>
