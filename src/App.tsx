@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import useInterval from "./utils/useInterval";
+import { FaPlay, FaPause } from "react-icons/fa";
 
 const soundfile1 = require("./assets/click1.mp3");
 const soundfile2 = require("./assets/click2.mp3");
@@ -8,131 +9,42 @@ const click1 = new Audio(soundfile1);
 const click2 = new Audio(soundfile2);
 
 const Container = styled.main`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
   height: 100vh;
-`;
-const Metronome = styled.section`
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height: 250px;
-  justify-content: space-between;
-`;
-const BPMDisplay = styled.div`
-  width: 100%;
-  text-align: center;
-  color: #fa545c;
-  font-weight: bold;
-  .tempo {
-    font-size: 4em;
-  }
-`;
-const TempoSettings = styled.div`
-  display: flex;
-  justify-content: space-between;
-  .adjust-tempo-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    border-radius: 15px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    &:hover {
-      background: #fa545c;
-      color: #fff;
-    }
-  }
-`;
-const BPMSlider = styled.input`
-  -webkit-appearance: none;
-  background-color: transparent;
-  width: 70%;
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-  }
-  &:focus {
-    outline: none;
-  }
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fa545c;
-    cursor: pointer;
-    margin-top: -8px;
-  }
-  &::-moz-range-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fa545c;
-    cursor: pointer;
-    border: none;
-  }
-  &::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 1px;
-    background: #ddd;
-  }
-  &::-moz-range-track {
-    width: 100%;
-    height: 1px;
-    background: #ddd;
-  }
-`;
-const StartStop = styled.div`
-  width: 50px;
-  height: 50px;
-  font-size: 0.7em;
-  text-align: center;
-  background: #fa545c;
-  border-radius: 50%;
-  color: #fff;
-  line-height: 50px;
-  margin: 0 auto;
-  cursor: pointer;
-  &:hover {
-    background: #ff656c;
-  }
-`;
-const Measures = styled.div`
-  display: flex;
   justify-content: center;
-  .stepper {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    text-align: center;
-    margin: 0 5px;
-    cursor: pointer;
-    &:hover {
-      background: #ff656c;
-      color: #fff;
-    }
-  }
-  .add-beats {
-    line-height: 20px;
-  }
+  gap: 16vh;
+  align-items: center;
 `;
-const MeasureText = styled.span`
-  text-align: center;
-  font-size: 0.5em;
-  text-transform: uppercase;
+
+const Indicator = styled.section`
+  display: flex;
+  gap: 30px;
+`;
+
+const Circle = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+`;
+
+const BPMText = styled.h1`
+  font-size: 160px;
+  font-weight: 900;
+  color: #222;
+`;
+
+const Buttons = styled.section`
+  cursor: pointer;
+  font-size: 50px;
 `;
 
 function App() {
   const [bpm, setBpm] = useState(140);
   const [timeInterval, setTimeInterval] = useState(60000 / bpm);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => setTimeInterval(60000 / bpm), [bpm]);
@@ -168,63 +80,39 @@ function App() {
   };
   const playClick = () => {
     if (!isRunning) return;
-    setCount((prev) => prev + 1);
-    if (count === beatsPerMeasure) {
-      setCount(1);
-    }
-    if (count === 1) {
-      click1.play();
-    } else {
-      click2.play();
+    else {
+      if (count === beatsPerMeasure) {
+        setCount(0);
+      }
+      if (count === 0) {
+        click1.play();
+      } else {
+        click2.play();
+      }
+      setCount((prev) => prev + 1);
     }
   };
+
+  console.log(count);
 
   useInterval(playClick, timeInterval);
 
   return (
     <Container>
-      <Metronome>
-        <BPMDisplay>
-          <span className="tempo">{bpm}</span>
-          <span className="bpm">BPM</span>
-        </BPMDisplay>
-        <TempoSettings>
-          <div
-            className="adjust-tempo-btn decrease-tempo"
-            onClick={onDecreaseClick}
-          >
-            -
-          </div>
-          <BPMSlider
-            type="range"
-            min="20"
-            max="280"
-            step="1"
-            value={bpm}
-            className="slider"
-            onChange={onSliderChange}
+      <Indicator>
+        {[1, 2, 3, 4].map((item) => (
+          <Circle
+            key={item}
+            style={{
+              backgroundColor: isRunning && item === count ? "#333" : "#ccc",
+            }}
           />
-          <div
-            className="adjust-tempo-btn increase-tempo"
-            onClick={onIncreaseClick}
-          >
-            +
-          </div>
-        </TempoSettings>
-        <StartStop onClick={onStartStopClick}>
-          {isRunning ? "STOP" : "START"}
-        </StartStop>
-        <Measures>
-          <div className="subtract-beats stepper" onClick={onBeatsSubtract}>
-            -
-          </div>
-          <div className="measure-count">{beatsPerMeasure}</div>
-          <div className="add-beats stepper" onClick={onBeatsAdd}>
-            +
-          </div>
-        </Measures>
-        <MeasureText>Beats per measure</MeasureText>
-      </Metronome>
+        ))}
+      </Indicator>
+      <BPMText>{bpm}</BPMText>
+      <Buttons onClick={onStartStopClick}>
+        {isRunning ? <FaPause /> : <FaPlay />}
+      </Buttons>
     </Container>
   );
 }
