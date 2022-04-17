@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Timer from "./timer";
+import useInterval from "./utils/useInterval";
 
 const soundfile1 = require("./assets/click1.mp3");
 const soundfile2 = require("./assets/click2.mp3");
@@ -130,67 +130,56 @@ const MeasureText = styled.span`
 
 function App() {
   const [bpm, setBpm] = useState(140);
+  const [timeInterval, setTimeInterval] = useState(60000 / bpm);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => setTimeInterval(60000 / bpm), [bpm]);
 
   const onDecreaseClick = () => {
     if (bpm <= 20) return;
     setBpm((prev) => prev + 1);
-    updateMetronome();
   };
   const onIncreaseClick = () => {
     if (bpm >= 280) return;
     setBpm((prev) => prev + 1);
-    updateMetronome();
   };
   const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
     setBpm(Number(event.currentTarget.value));
-    updateMetronome();
   };
   const onBeatsSubtract = () => {
     if (beatsPerMeasure <= 2) return;
     setBeatsPerMeasure((prev) => prev - 1);
-    setCount(0);
+    setCount(1);
   };
   const onBeatsAdd = () => {
     if (beatsPerMeasure >= 12) return;
     setBeatsPerMeasure((prev) => prev + 1);
-    setCount(0);
+    setCount(1);
   };
   const onStartStopClick = () => {
-    setCount(0);
+    setCount(1);
     if (!isRunning) {
-      metronome.start();
       setIsRunning(true);
     } else {
-      metronome.stop();
       setIsRunning(false);
     }
   };
-
-  const updateMetronome = () => {
-    metronome.timeInterval = 60000 / bpm;
-  };
-
-  const playClick = useCallback(() => {
-    console.log(count);
+  const playClick = () => {
+    if (!isRunning) return;
+    setCount((prev) => prev + 1);
     if (count === beatsPerMeasure) {
-      setCount(0);
+      setCount(1);
     }
-    if (count === 0) {
+    if (count === 1) {
       click1.play();
-      click1.currentTime = 0;
     } else {
       click2.play();
-      click2.currentTime = 0;
     }
-    setCount((prev) => prev + 1);
-  }, [beatsPerMeasure, count]);
+  };
 
-  const metronome = new Timer(playClick, 60000 / bpm, {
-    immediate: true,
-  });
+  useInterval(playClick, timeInterval);
 
   return (
     <Container>
