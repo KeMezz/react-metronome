@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import useInterval from "./utils/useInterval";
 import { FaPlay, FaPause } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const soundfile1 = require("./assets/click1.mp3");
 const soundfile2 = require("./assets/click2.mp3");
@@ -35,7 +36,7 @@ const BPMText = styled.h1`
   color: #222;
 `;
 
-const Buttons = styled.section`
+const Buttons = styled(motion.section)`
   cursor: pointer;
   font-size: 50px;
 `;
@@ -84,7 +85,7 @@ function App() {
       if (count === beatsPerMeasure) {
         setCount(0);
       }
-      if (count === 0) {
+      if (count === 1) {
         click1.play();
       } else {
         click2.play();
@@ -100,7 +101,7 @@ function App() {
   return (
     <Container>
       <Indicator>
-        {[1, 2, 3, 4].map((item) => (
+        {[2, 3, 4, 1].map((item) => (
           <Circle
             key={item}
             style={{
@@ -110,7 +111,12 @@ function App() {
         ))}
       </Indicator>
       <BPMText>{bpm}</BPMText>
-      <Buttons onClick={onStartStopClick}>
+      <Buttons
+        initial={{ scale: 1 }}
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ scale: 0.8 }}
+        onClick={onStartStopClick}
+      >
         {isRunning ? <FaPause /> : <FaPlay />}
       </Buttons>
     </Container>
