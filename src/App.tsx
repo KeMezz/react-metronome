@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useInterval from "./utils/useInterval";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { motion } from "framer-motion";
+import useEventListener from "./utils/useEventListener";
 
 const soundfile1 = require("./assets/click1.mp3");
 const soundfile2 = require("./assets/click2.mp3");
@@ -30,10 +31,11 @@ const Circle = styled.div`
   border-radius: 30px;
 `;
 
-const BPMText = styled.h1`
+const BPMText = styled(motion.h1)`
   font-size: 160px;
   font-weight: 900;
   color: #222;
+  cursor: ns-resize;
 `;
 
 const Buttons = styled(motion.section)`
@@ -42,11 +44,12 @@ const Buttons = styled(motion.section)`
 `;
 
 function App() {
-  const [bpm, setBpm] = useState(140);
+  const [bpm, setBpm] = useState(80);
   const [timeInterval, setTimeInterval] = useState(60000 / bpm);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
   const [count, setCount] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [accentMode, setAccentMode] = useState(true);
 
   useEffect(() => setTimeInterval(60000 / bpm), [bpm]);
 
@@ -72,7 +75,7 @@ function App() {
     setCount(1);
   };
   const onStartStopClick = () => {
-    setCount(1);
+    setCount(0);
     if (!isRunning) {
       setIsRunning(true);
     } else {
@@ -85,8 +88,8 @@ function App() {
       if (count === beatsPerMeasure) {
         setCount(0);
       }
-      if (count === 1) {
-        click1.play();
+      if (count === 0 || count === beatsPerMeasure) {
+        accentMode ? click1.play() : click2.play();
       } else {
         click2.play();
       }
@@ -94,14 +97,18 @@ function App() {
     }
   };
 
-  console.log(count);
-
   useInterval(playClick, timeInterval);
+  useEventListener("keypress", (event) => {
+    if (event.key === " ") {
+      setIsRunning((prev) => !prev);
+      setCount(0);
+    }
+  });
 
   return (
     <Container>
       <Indicator>
-        {[2, 3, 4, 1].map((item) => (
+        {[1, 2, 3, 4].map((item) => (
           <Circle
             key={item}
             style={{
@@ -110,7 +117,9 @@ function App() {
           />
         ))}
       </Indicator>
-      <BPMText>{bpm}</BPMText>
+      <BPMText initial={{ scale: 1 }} whileHover={{ scale: 1.1 }}>
+        {bpm}
+      </BPMText>
       <Buttons
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.2 }}
