@@ -53,25 +53,16 @@ function App() {
 
   useEffect(() => setTimeInterval(60000 / bpm), [bpm]);
 
-  const onDecreaseClick = () => {
-    if (bpm <= 20) return;
-    setBpm((prev) => prev + 1);
-  };
-  const onIncreaseClick = () => {
-    if (bpm >= 280) return;
-    setBpm((prev) => prev + 1);
+  const changeBPM = (value: number) => {
+    // if (bpm <= 20 || bpm >= 300) setBpm(bpm);
+    setBpm((prev) => prev + value);
   };
   const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
     setBpm(Number(event.currentTarget.value));
   };
-  const onBeatsSubtract = () => {
-    if (beatsPerMeasure <= 2) return;
-    setBeatsPerMeasure((prev) => prev - 1);
-    setCount(1);
-  };
-  const onBeatsAdd = () => {
-    if (beatsPerMeasure >= 12) return;
-    setBeatsPerMeasure((prev) => prev + 1);
+  const changeMeasure = (value: number) => {
+    if (beatsPerMeasure <= 2 || beatsPerMeasure >= 12) return;
+    setBeatsPerMeasure((prev) => prev + value);
     setCount(1);
   };
   const onStartStopClick = () => {
@@ -98,10 +89,22 @@ function App() {
   };
 
   useInterval(playClick, timeInterval);
-  useEventListener("keypress", (event) => {
+
+  useEventListener("keydown", (event) => {
+    console.log(event);
     if (event.key === " ") {
       setIsRunning((prev) => !prev);
       setCount(0);
+    } else if (event.key === "ArrowUp") {
+      changeBPM(1);
+    } else if (event.key === "ArrowDown") {
+      changeBPM(-1);
+    } else if (event.key === "ArrowRight") {
+      changeBPM(+10);
+    } else if (event.key === "ArrowLeft") {
+      changeBPM(-10);
+    } else if (event.key === "Enter") {
+      setAccentMode((prev) => !prev);
     }
   });
 
