@@ -50,8 +50,16 @@ function App() {
   const [count, setCount] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [accentMode, setAccentMode] = useState(true);
+  const [measureArr, setMeasureArr] = useState([1, 2, 3, 4]);
 
-  useEffect(() => setTimeInterval(60000 / bpm), [bpm]);
+  useEffect(() => {
+    setTimeInterval(60000 / bpm);
+    if (bpm <= 20) {
+      setBpm(20);
+    } else if (bpm >= 300) {
+      setBpm(300);
+    }
+  }, [bpm]);
 
   const changeBPM = (value: number) => {
     // if (bpm <= 20 || bpm >= 300) setBpm(bpm);
@@ -91,10 +99,12 @@ function App() {
   useInterval(playClick, timeInterval);
 
   useEventListener("keydown", (event) => {
-    console.log(event);
     if (event.key === " ") {
       setIsRunning((prev) => !prev);
       setCount(0);
+    }
+    if (bpm < 20 || bpm > 300) {
+      return;
     } else if (event.key === "ArrowUp") {
       changeBPM(1);
     } else if (event.key === "ArrowDown") {
@@ -103,7 +113,8 @@ function App() {
       changeBPM(+10);
     } else if (event.key === "ArrowLeft") {
       changeBPM(-10);
-    } else if (event.key === "Enter") {
+    }
+    if (event.key === "Enter") {
       setAccentMode((prev) => !prev);
     }
   });
@@ -111,7 +122,7 @@ function App() {
   return (
     <Container>
       <Indicator>
-        {[1, 2, 3, 4].map((item) => (
+        {measureArr.map((item) => (
           <Circle
             key={item}
             style={{
