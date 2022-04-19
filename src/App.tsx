@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import useInterval from "./utils/useInterval";
+import useEventListener from "./utils/useEventListener";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { motion } from "framer-motion";
-import useEventListener from "./utils/useEventListener";
 
 const soundfile1 = require("./assets/click1.mp3");
 const soundfile2 = require("./assets/click2.mp3");
@@ -53,6 +53,16 @@ function App() {
   const [measureArr, setMeasureArr] = useState([1, 2, 3, 4]);
 
   useEffect(() => {
+    setMeasureArr(() => {
+      let resultArr = [1];
+      for (let i = 2; i <= beatsPerMeasure; i++) {
+        resultArr.push(i);
+      }
+      return resultArr;
+    });
+  }, [beatsPerMeasure]);
+
+  useEffect(() => {
     setTimeInterval(60000 / bpm);
     if (bpm <= 20) {
       setBpm(20);
@@ -62,7 +72,6 @@ function App() {
   }, [bpm]);
 
   const changeBPM = (value: number) => {
-    // if (bpm <= 20 || bpm >= 300) setBpm(bpm);
     setBpm((prev) => prev + value);
   };
   const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -103,20 +112,37 @@ function App() {
       setIsRunning((prev) => !prev);
       setCount(0);
     }
-    if (bpm < 20 || bpm > 300) {
-      return;
-    } else if (event.key === "ArrowUp") {
-      changeBPM(1);
-    } else if (event.key === "ArrowDown") {
-      changeBPM(-1);
-    } else if (event.key === "ArrowRight") {
-      changeBPM(+10);
-    } else if (event.key === "ArrowLeft") {
-      changeBPM(-10);
+    if (event.key === "3") {
+      setCount(0);
+      setBeatsPerMeasure(3);
     }
-    if (event.key === "Enter") {
-      setAccentMode((prev) => !prev);
+    if (event.key === "4") {
+      setCount(0);
+      setBeatsPerMeasure(4);
     }
+    if (event.key === "5") {
+      setCount(0);
+      setBeatsPerMeasure(5);
+    }
+    if (event.key === "6") {
+      setCount(0);
+      setBeatsPerMeasure(6);
+    }
+    if (event.key === "7") {
+      setCount(0);
+      setBeatsPerMeasure(7);
+    }
+    if (event.key === "8") {
+      setCount(0);
+      setBeatsPerMeasure(8);
+    }
+    if (bpm < 20 || bpm > 300) return;
+    else if (event.key === "ArrowUp") changeBPM(1);
+    else if (event.key === "ArrowDown") changeBPM(-1);
+    else if (event.key === "ArrowRight") changeBPM(+10);
+    else if (event.key === "ArrowLeft") changeBPM(-10);
+
+    if (event.key === "Enter") setAccentMode((prev) => !prev);
   });
 
   return (
