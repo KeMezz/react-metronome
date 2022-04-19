@@ -74,14 +74,14 @@ function App() {
   const changeBPM = (value: number) => {
     setBpm((prev) => prev + value);
   };
-  const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setBpm(Number(event.currentTarget.value));
-  };
-  const changeMeasure = (value: number) => {
-    if (beatsPerMeasure <= 2 || beatsPerMeasure >= 12) return;
-    setBeatsPerMeasure((prev) => prev + value);
-    setCount(1);
-  };
+  // const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
+  //   setBpm(Number(event.currentTarget.value));
+  // };
+  // const changeMeasure = (value: number) => {
+  //   if (beatsPerMeasure <= 2 || beatsPerMeasure >= 12) return;
+  //   setBeatsPerMeasure((prev) => prev + value);
+  //   setCount(1);
+  // };
   const onStartStopClick = () => {
     setCount(0);
     if (!isRunning) {
