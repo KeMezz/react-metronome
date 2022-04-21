@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useInterval from "./utils/useInterval";
 import useEventListener from "./utils/useEventListener";
 import { FaPlay, FaPause } from "react-icons/fa";
+import { GoCheck } from "react-icons/go";
 import { motion } from "framer-motion";
 
 const soundfile1 = require("./assets/click1.mp3");
@@ -10,29 +11,65 @@ const soundfile2 = require("./assets/click2.mp3");
 const click1 = new Audio(soundfile1);
 const click2 = new Audio(soundfile2);
 
-const Container = styled.main`
+const Container = styled.main<{ isRunning: boolean }>`
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16vh;
+  gap: 18vh;
   align-items: center;
+  /* background: linear-gradient(270deg, #00ffbd, #d7ff00, #a300ff, #ffb6b6);
+  background-size: 800% 800%;
+  -webkit-animation: transition 0s ease infinite;
+  -moz-animation: transition 0s ease infinite;
+  animation: transition 0s ease infinite;
+  @keyframes transition {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  } */
+`;
+
+const Draggable = styled.div`
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 36px;
+  background-color: #f1f1f1;
+  position: fixed;
+  -webkit-app-region: drag;
 `;
 
 const Indicator = styled.section`
   display: flex;
-  gap: 30px;
+  gap: 20px;
 `;
 
 const Circle = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:first-child {
+    cursor: pointer;
+  }
+  svg {
+    font-size: 26px;
+    color: #999;
+  }
 `;
 
 const BPMText = styled(motion.h1)`
-  font-size: 160px;
+  font-size: 140px;
   font-weight: 900;
   color: #222;
   cursor: ns-resize;
@@ -40,7 +77,7 @@ const BPMText = styled(motion.h1)`
 
 const Buttons = styled(motion.section)`
   cursor: pointer;
-  font-size: 50px;
+  font-size: 40px;
 `;
 
 function App() {
@@ -136,7 +173,7 @@ function App() {
       setCount(0);
       setBeatsPerMeasure(8);
     }
-    if (bpm < 20 || bpm > 300) return;
+    if (bpm < 40 || bpm > 300) return;
     else if (event.key === "ArrowUp") changeBPM(1);
     else if (event.key === "ArrowDown") changeBPM(-1);
     else if (event.key === "ArrowRight") changeBPM(+10);
@@ -145,21 +182,28 @@ function App() {
     if (event.key === "Enter") setAccentMode((prev) => !prev);
   });
 
+  const toggleAccent = () => {
+    setCount(0);
+    setAccentMode((prev) => !prev);
+  };
+
   return (
-    <Container>
+    <Container isRunning={isRunning}>
+      <Draggable />
       <Indicator>
-        {measureArr.map((item) => (
+        {measureArr.map((item, index) => (
           <Circle
-            key={item}
+            key={index}
             style={{
-              backgroundColor: isRunning && item === count ? "#333" : "#ccc",
+              backgroundColor: isRunning && item === count ? "#333" : "#ddd",
             }}
-          />
+            onClick={toggleAccent}
+          >
+            {index === 0 && accentMode ? <GoCheck /> : null}
+          </Circle>
         ))}
       </Indicator>
-      <BPMText initial={{ scale: 1 }} whileHover={{ scale: 1.1 }}>
-        {bpm}
-      </BPMText>
+      <BPMText>{bpm}</BPMText>
       <Buttons
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.2 }}
