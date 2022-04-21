@@ -7,8 +7,13 @@ function createWindow() {
    * 넓이 1920에 높이 1080의 FHD 풀스크린 앱을 실행시킵니다.
    * */
   const win = new BrowserWindow({
-    width: 600,
-    height: 800,
+    width: 420,
+    height: 760,
+    resizable: false,
+    titleBarStyle: "hidden",
+    maximizable: false,
+    title: "Keynome",
+    trafficLightPosition: { x: 10, y: 10 },
   });
 
   /*

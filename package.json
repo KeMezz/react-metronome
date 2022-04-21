@@ -2,8 +2,18 @@
   "name": "react-metronome",
   "version": "0.1.0",
   "private": true,
-  "main": "public/Main.js",
+  "main": "public/electron.js",
   "homepage:": "./",
+  "build": {
+    "appId": "com.example.electron-cra",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
@@ -31,7 +41,8 @@
     "eject": "react-scripts eject",
     "react-start": "BROWSER=none npm start",
     "electron-start": "ELECTRON_START_URL=http://localhost:3000 electron .",
-    "electron-pack": "npm build && electron-builder build -c extraMetadata.main=build/Main.js"
+    "preelectron-pack": "npm run build",
+    "electron-pack": "build --em.main=build/electron.js"
   },
   "eslintConfig": {
     "extends": [
