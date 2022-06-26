@@ -1,5 +1,6 @@
 {
   "name": "react-metronome",
+  "productName": "Keynome",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
