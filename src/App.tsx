@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import useInterval from "./utils/useInterval";
 import useEventListener from "./utils/useEventListener";
@@ -6,8 +6,8 @@ import { FaPlay, FaPause } from "react-icons/fa";
 import { GoCheck } from "react-icons/go";
 import { motion } from "framer-motion";
 
-const soundfile1 = require("./assets/click1.mp3");
-const soundfile2 = require("./assets/click2.mp3");
+const soundfile1 = require("./assets/sounds/click1.mp3");
+const soundfile2 = require("./assets/sounds/click2.mp3");
 const click1 = new Audio(soundfile1);
 const click2 = new Audio(soundfile2);
 
@@ -19,22 +19,6 @@ const Container = styled.main<{ isRunning: boolean }>`
   justify-content: center;
   gap: 18vh;
   align-items: center;
-  /* background: linear-gradient(270deg, #00ffbd, #d7ff00, #a300ff, #ffb6b6);
-  background-size: 800% 800%;
-  -webkit-animation: transition 0s ease infinite;
-  -moz-animation: transition 0s ease infinite;
-  animation: transition 0s ease infinite;
-  @keyframes transition {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  } */
 `;
 
 const Draggable = styled.div`
@@ -111,14 +95,6 @@ function App() {
   const changeBPM = (value: number) => {
     setBpm((prev) => prev + value);
   };
-  // const onSliderChange = (event: React.FormEvent<HTMLInputElement>) => {
-  //   setBpm(Number(event.currentTarget.value));
-  // };
-  // const changeMeasure = (value: number) => {
-  //   if (beatsPerMeasure <= 2 || beatsPerMeasure >= 12) return;
-  //   setBeatsPerMeasure((prev) => prev + value);
-  //   setCount(1);
-  // };
   const onStartStopClick = () => {
     setCount(0);
     if (!isRunning) {
